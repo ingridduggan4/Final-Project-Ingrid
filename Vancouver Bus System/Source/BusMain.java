@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BusMain 
 {
@@ -17,27 +18,44 @@ public class BusMain
 	        
 	        try
 	        {
-	        	String text=br.readLine();
+	  
+	        	//System.out.println("TEXT: " + text);
 	        	
-	            while(text!=null)
-	            {  
-	            	BusStop busStop = new BusStop();
+	              
 	            	
-	            	String[] busStopData= text.split(",");
-	            	busStop.iD = Integer.parseInt(busStopData[0]);
-	            	busStop.code = Integer.parseInt(busStopData[1]);
-	            	busStop.name = busStopData[2];
-	            	busStop.desc = busStopData[3];
-	            	busStop.latitude = Double.parseDouble(busStopData[4]);
-	            	busStop.longitude = Double.parseDouble(busStopData[5]);
-	            	busStop.zoneID = busStopData[6];
-	            	busStop.stopURL = Integer.parseInt(busStopData[7]);
-	            	busStop.locationType = Integer.parseInt(busStopData[8]);
-	            	busStop.parentStation = busStopData[9];
+	            	for(int i = 0; i < 8758; i++)
+	            	{
+	            		String text=br.readLine();
+	            		System.out.println("ENTER");
+		            	
+		            	
+		            	String[] busStopData= text.split(",");
+		            	System.out.print(Arrays.toString(busStopData));
+		          
+		            	int iD = Integer.parseInt(busStopData[0]);
+		            	String code = busStopData[1];
+		            	String name = busStopData[2];
+		            	String desc = busStopData[3];
+		            	Double latitude = Double.parseDouble(busStopData[4]);
+		            	Double longitude = Double.parseDouble(busStopData[5]);
+		            	String zoneID = busStopData[6];
+		            	
+		            	String stopURL = busStopData[7];
+		            	
+		            	String locationType = busStopData[8];
+		            	
+		
+		            	BusStop busStop = new BusStop(iD, code, name, desc, latitude, longitude, zoneID, stopURL, locationType);
+		            
+		            	
+		            	
+		            	
+		                busStopList.add(busStop);
+		                
+	            	}
 	            	
-	                busStopList.add(busStop);
-	                text=br.readLine();
-	            }
+	            	
+	            
 	
 	            br.close();    
 	            fr.close();
@@ -113,7 +131,7 @@ public class BusMain
 	            	stopTime.stopHeadsign = Integer.parseInt(stopTimeData[5]);
 	            	stopTime.pickupType = Integer.parseInt(stopTimeData[6]);
 	            	stopTime.dropoffType = Integer.parseInt(stopTimeData[7]);
-	            	stopTime.distTraveled = Double.parseDouble(stopTimeData[3]);
+	            	stopTime.distTraveled = Double.parseDouble(stopTimeData[8]);
 	            	
 	                stopTimesList.add(stopTime);
 	                text=br.readLine();
@@ -133,10 +151,10 @@ public class BusMain
 	{
 		System.out.println("Welcome to the Vancouver Bus System!");
 		System.out.println("What would you like to do next?");
-		System.out.println("(1) Find the shortest path between two bus stops");
-		System.out.println("(2) Search for a bus stop by name" );
-		System.out.println("(3) Search for all trips with a certain arrival time");
-		System.out.println("(Please enter either 1,2,3 or 'quit')");
+		System.out.println("(A) Find the shortest path between two bus stops");
+		System.out.println("(B) Search for a bus stop by name" );
+		System.out.println("(C) Search for all trips with a certain arrival time");
+		System.out.println("(Please enter either A,B,C or 'quit')");
 		Scanner input = new Scanner(System.in);
 		String userInput = input.next();
 		
@@ -144,31 +162,40 @@ public class BusMain
 		
 		while(!userInput.equalsIgnoreCase("quit"))
 		{
-			System.out.println("What would you like to do next?");
-			System.out.println("(1) Find the shortest path between two bus stops");
-			System.out.println("(2) Search for a bus stop by name" );
-			System.out.println("(3) Search for all trips with a certain arrival time");
-			System.out.println("(Please enter either 1,2,3 or 'quit')");
-			userInput = input.next();
+
 			
-			if(userInput!="1" && userInput != "2" && userInput != "3" && !userInput.equalsIgnoreCase("quit"))
+			if(userInput.equalsIgnoreCase("A"))
+			{
+				System.out.println("ONE");
+				
+			}
+			else if(userInput.equalsIgnoreCase("B"))
+			{
+				System.out.println("TWO");
+				ArrayList<BusStop> busStopList = readInStopsFile("Stops");
+				System.out.print("SIZE: "+busStopList.size());
+				BusStop firstStop = busStopList.get(8756);
+				System.out.println("FIRST STOP: ");
+				System.out.print(firstStop.toString());
+			}
+			else if(userInput.equalsIgnoreCase("C"))
+			{
+				System.out.println("THREE");
+			}
+			else if(!userInput.equalsIgnoreCase("quit"))
 			{
 				System.out.println("Error: invalid input");
 
 			}
 			
-			if(userInput.equals("1"))
-			{
-				System.out.print("ONE");
-			}
-			else if(userInput.equals("2"))
-			{
-				
-			}
-			else if(userInput.equals("3"))
-			{
-				
-			}
+			System.out.println("What would you like to do next?");
+			System.out.println("(A) Find the shortest path between two bus stops");
+			System.out.println("(B) Search for a bus stop by name" );
+			System.out.println("(C) Search for all trips with a certain arrival time");
+			System.out.println("(Please enter either A,B,C or 'quit')");
+			userInput = input.next();
+			
+			
 		}
 		
 		System.out.print("Thank you for using the Vancouver Bus System, goodbye!");
