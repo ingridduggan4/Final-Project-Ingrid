@@ -18,10 +18,6 @@ public class BusMain
 	        
 	        try
 	        {
-	  
-	        	//System.out.println("TEXT: " + text);
-	        	
-	              
 	            	
 	            	for(int i = 0; i < 8758; i++)
 	            	{
@@ -39,23 +35,12 @@ public class BusMain
 		            	Double latitude = Double.parseDouble(busStopData[4]);
 		            	Double longitude = Double.parseDouble(busStopData[5]);
 		            	String zoneID = busStopData[6];
-		            	
 		            	String stopURL = busStopData[7];
-		            	
 		            	String locationType = busStopData[8];
-		            	
-		
 		            	BusStop busStop = new BusStop(iD, code, name, desc, latitude, longitude, zoneID, stopURL, locationType);
-		            
-		            	
-		            	
-		            	
 		                busStopList.add(busStop);
 		                
 	            	}
-	            	
-	            	
-	            
 	
 	            br.close();    
 	            fr.close();
@@ -88,7 +73,6 @@ public class BusMain
 	            	transfer.fromStopID = Integer.parseInt(transferData[0]);
 	            	transfer.toStopID = Integer.parseInt(transferData[1]);
 	            	transfer.transferType = Integer.parseInt(transferData[2]);
-	            	transfer.minTransferTime = Integer.parseInt(transferData[3]);
 	            	
 	                transfersList.add(transfer);
 	                text=br.readLine();
@@ -126,12 +110,30 @@ public class BusMain
 	            	stopTime.tripID = Integer.parseInt(stopTimeData[0]);
 	            	stopTime.arrivalTime = stopTimeData[1];
 	            	stopTime.departureTime = stopTimeData[2];
+	            	
 	            	stopTime.stopID = Integer.parseInt(stopTimeData[3]);
+	            	System.out.print("HERE");
 	            	stopTime.stopSequence = Integer.parseInt(stopTimeData[4]);
-	            	stopTime.stopHeadsign = Integer.parseInt(stopTimeData[5]);
+	            	stopTime.stopHeadsign = stopTimeData[5];
 	            	stopTime.pickupType = Integer.parseInt(stopTimeData[6]);
 	            	stopTime.dropoffType = Integer.parseInt(stopTimeData[7]);
-	            	stopTime.distTraveled = Double.parseDouble(stopTimeData[8]);
+	            	
+	            	
+	            	if(stopTimeData.length == 9)
+	            	{
+	            		stopTime.distTraveled = Double.parseDouble(stopTimeData[8]);
+	            	}
+	            	else
+	            	{
+	            		stopTime.distTraveled = 0;
+	            	}
+	            	
+	            	/*if(stopTimeData[8] == "")
+	            	{
+	            		stopTime.distTraveled = Double.parseDouble(stopTimeData[8]);
+	            	}
+	            	*/
+	            	
 	            	
 	                stopTimesList.add(stopTime);
 	                text=br.readLine();
@@ -171,11 +173,10 @@ public class BusMain
 			}
 			else if(userInput.equalsIgnoreCase("B"))
 			{
-				System.out.println("TWO");
-				ArrayList<BusStop> busStopList = readInStopsFile("Stops");
-				System.out.print("SIZE: "+busStopList.size());
-				BusStop firstStop = busStopList.get(8756);
-				System.out.println("FIRST STOP: ");
+				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Transfers");
+				System.out.print("SIZE: "+ stopTimesList.size());
+				StopTimes firstStop = stopTimesList.get(0);
+				System.out.println("FIRST TIME: ");
 				System.out.print(firstStop.toString());
 			}
 			else if(userInput.equalsIgnoreCase("C"))
