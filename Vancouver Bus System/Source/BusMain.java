@@ -22,11 +22,11 @@ public class BusMain
 	            	for(int i = 0; i < 8758; i++)
 	            	{
 	            		String text=br.readLine();
-	            		System.out.println("ENTER");
+	            		//System.out.println("ENTER");
 		            	
 		            	
 		            	String[] busStopData= text.split(",");
-		            	System.out.print(Arrays.toString(busStopData));
+		            	//System.out.print(Arrays.toString(busStopData));
 		          
 		            	int iD = Integer.parseInt(busStopData[0]);
 		            	String code = busStopData[1];
@@ -188,6 +188,7 @@ public class BusMain
 				if(input.hasNext())
 				{
 					String userString = input.next();
+					TST<BusStop> busStopTST = new TST();
 					//System.out.println("You entered: " + userString);
 					
 					for(int i = 0; i < busStopList.size(); i++)
@@ -195,11 +196,33 @@ public class BusMain
 						BusStop currentStop = busStopList.get(i);
 						currentStop.moveKeywordToEnd();
 						busStopList.set(i, currentStop);
+						busStopTST.put(currentStop.name, currentStop);
 					}
 					
-					BusStop firstStop = busStopList.get(0);
-					System.out.println("FIRST Stop: ");
-					System.out.println(firstStop.name);
+					//BusStop firstStop = busStopList.get(0);
+					//.out.println("FIRST Stop: ");
+					//System.out.println(firstStop.name);
+					//System.out.print(busStopTST.keysWithPrefix(userString));
+					
+					System.out.print("\n");
+					System.out.print("Here are all the stops matching your search: \n");
+					System.out.print("\n");
+					
+					int stopCount = 0;
+					
+					Iterable<String> stops = busStopTST.keysWithPrefix(userString);
+					for(String stop : stops)
+					{
+						stopCount++;
+						BusStop currentStop = busStopTST.get(stop);
+						System.out.println(stopCount + ": " +stop);
+						System.out.print(currentStop.toStringForSearch());
+						System.out.println("");
+					}
+					
+					
+					
+					
 				}
 			}
 			else if(userInput.equalsIgnoreCase("C"))

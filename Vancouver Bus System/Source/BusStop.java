@@ -34,7 +34,12 @@ public class BusStop
 	
 	public String toString()
 	{
-		return "iD: " + iD + "\n code: " + code + "\n name: " + name;
+		return "iD: " + iD + ",code: " + code + ",name: " + name + "\n";
+	}
+	
+	public String toStringForSearch()
+	{
+		return "ID: " + iD + ", code: " + code + ", description: " + desc + ", latitude: " + latitude + ", longitude: " + longitude + ", zone ID: " + zoneID + ", stop URL: " + stopURL + ", location type: " + locationType + ", parent station: " + parentStation + "\n";
 	}
 	
 	public void moveKeywordToEnd()
