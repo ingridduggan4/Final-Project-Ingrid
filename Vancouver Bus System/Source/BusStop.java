@@ -1,4 +1,4 @@
-
+import java.util.Arrays;
 public class BusStop 
 {
 	public int iD;
@@ -36,5 +36,37 @@ public class BusStop
 	{
 		return "iD: " + iD + "\n code: " + code + "\n name: " + name;
 	}
+	
+	public void moveKeywordToEnd()
+	{
+		String stopName = name;
+		
+		String[] separateKeyword = stopName.split(" ",3);
+		
+		if(separateKeyword[0].equals("WB") || separateKeyword[0].equals("NB") || separateKeyword[0].equals("SB") || separateKeyword[0].equals("EB") || separateKeyword[0].equals("FLAGSTOP"))
+		{
+			if(separateKeyword[1].equals("WB") || separateKeyword[1].equals("NB") || separateKeyword[1].equals("SB") || separateKeyword[1].equals("EB") || separateKeyword[1].equals("FLAGSTOP"))
+			{
+				stopName = separateKeyword[2] + " " + separateKeyword[0] + " " + separateKeyword[1] ;
+			}
+			else
+			{
+				stopName = separateKeyword[1] + " " + separateKeyword[2] + " " + separateKeyword[0];
+			
+			}
+
+		}
+		
+		name = stopName;
+	}
+	
+	public static void main(String[] args)
+	{
+		BusStop testStop = new BusStop(0,"0","WB HASTINGS ST FS HOLDOM AVE","0",0,0,"0","0","0");
+		testStop.moveKeywordToEnd();
+		
+		System.out.println("STOP NAME MOVED KEYWORD: " + testStop.name);
+	}
+	
 	
 }

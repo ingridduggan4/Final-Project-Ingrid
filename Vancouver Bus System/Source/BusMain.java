@@ -101,9 +101,11 @@ public class BusMain
 	        try
 	        {
 	        	String text=br.readLine();
+	        	int count = 0;
 	        	
 	            while(text!=null)
 	            {  
+	            	System.out.println(count);
 	            	StopTimes stopTime = new StopTimes();
 	            	
 	            	String[] stopTimeData= text.split(",");
@@ -111,8 +113,9 @@ public class BusMain
 	            	stopTime.arrivalTime = stopTimeData[1];
 	            	stopTime.departureTime = stopTimeData[2];
 	            	
-	            	stopTime.stopID = Integer.parseInt(stopTimeData[3]);
-	            	System.out.print("HERE");
+	            	System.out.print("LENGTH: "+stopTimeData.length);
+	            	stopTime.stopID = stopTimeData[3];
+	            	
 	            	stopTime.stopSequence = Integer.parseInt(stopTimeData[4]);
 	            	stopTime.stopHeadsign = stopTimeData[5];
 	            	stopTime.pickupType = Integer.parseInt(stopTimeData[6]);
@@ -137,6 +140,7 @@ public class BusMain
 	            	
 	                stopTimesList.add(stopTime);
 	                text=br.readLine();
+	                count++;
 	            }
 	
 	            br.close();    
@@ -173,11 +177,30 @@ public class BusMain
 			}
 			else if(userInput.equalsIgnoreCase("B"))
 			{
-				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Transfers");
-				System.out.print("SIZE: "+ stopTimesList.size());
-				StopTimes firstStop = stopTimesList.get(0);
-				System.out.println("FIRST TIME: ");
-				System.out.print(firstStop.toString());
+				ArrayList<BusStop> busStopList = readInStopsFile("Stops");
+				//System.out.print("SIZE: "+ busStopList.size());
+				//BusStop firstStop = busStopList.get(0);
+				//System.out.println("FIRST Stop: ");
+				//System.out.print(firstStop.toString());
+				
+				System.out.print("Please enter the stop you would like to search for: ");
+				
+				if(input.hasNext())
+				{
+					String userString = input.next();
+					//System.out.println("You entered: " + userString);
+					
+					for(int i = 0; i < busStopList.size(); i++)
+					{
+						BusStop currentStop = busStopList.get(i);
+						currentStop.moveKeywordToEnd();
+						busStopList.set(i, currentStop);
+					}
+					
+					BusStop firstStop = busStopList.get(0);
+					System.out.println("FIRST Stop: ");
+					System.out.println(firstStop.name);
+				}
 			}
 			else if(userInput.equalsIgnoreCase("C"))
 			{
