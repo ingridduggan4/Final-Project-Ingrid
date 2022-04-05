@@ -173,8 +173,6 @@ public class BusMain
 		
 		while(!userInput.equalsIgnoreCase("quit"))
 		{
-
-			
 			if(userInput.equalsIgnoreCase("A"))
 			{
 
@@ -241,14 +239,13 @@ public class BusMain
 	            	String[] arrivalTimeArray = arrivalTime.split(":");
 	            	String[] departureTimeArray = departureTime.split(":");
 	            	
-	            	if(Integer.parseInt(arrivalTimeArray[0]) > 24 && Integer.parseInt(departureTimeArray[0]) > 24)
+	            	if(Integer.parseInt(arrivalTimeArray[0]) > 24 || Integer.parseInt(departureTimeArray[0]) > 24)
 	            	{
-	            		System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
+	            		//System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
+	            		stopTimesList.remove(i);
 	            	}
 	            	
 	            }
-				
-				
 				
 				
 				//System.out.print("SIZE: "+ stopTimesList.size());
@@ -287,8 +284,10 @@ public class BusMain
 				}
 				
 				Insertion.sort(tripIdArray);
-				System.out.println("SORTED: ");
-				System.out.println(Arrays.toString(tripIdArray));
+				//System.out.println("SORTED: ");
+				//System.out.println(Arrays.toString(tripIdArray));
+				
+				System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
 				
 				for(int i = 0; i < tripIdArray.length; i ++)
 				{
@@ -328,5 +327,7 @@ public class BusMain
 		
 		System.out.print("Thank you for using the Vancouver Bus System, goodbye!");
 	}
+	
+	
 
 }
