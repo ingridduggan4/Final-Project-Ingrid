@@ -133,7 +133,8 @@ public class BusMain
 	            	}
 	            	*/
 	            	
-	            	/*String[] arrivalTime = stopTimeData[1].split(":");
+	            	/*
+	            	String[] arrivalTime = stopTimeData[1].split(":");
 	            	String[] departureTime = stopTimeData[2].split(":");
 	            	
 	            	if(Integer.parseInt(arrivalTime[0]) > 24 && Integer.parseInt(departureTime[0]) > 24)
@@ -142,13 +143,13 @@ public class BusMain
 	            	}
 	            	*/
 	            	
-	            	
 	            	stopTimesList.add(stopTime);
 	                text=br.readLine();
 	            }
 	
 	            br.close();    
 	            fr.close();
+	            
 	            
 	         }catch(Exception e){;}
         
@@ -224,16 +225,32 @@ public class BusMain
 						System.out.println("");
 					}
 					
-					
-					
-					
 				}
 			}
+			
 			else if(userInput.equalsIgnoreCase("C"))
 			{
 				System.out.println("THREE");
 				
 				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
+				
+	            for(int i = 0; i < stopTimesList.size(); i++)
+	            {
+	            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
+	            	String departureTime = stopTimesList.get(i).departureTime.trim();
+	            	String[] arrivalTimeArray = arrivalTime.split(":");
+	            	String[] departureTimeArray = departureTime.split(":");
+	            	
+	            	if(Integer.parseInt(arrivalTimeArray[0]) > 24 && Integer.parseInt(departureTimeArray[0]) > 24)
+	            	{
+	            		System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
+	            	}
+	            	
+	            }
+				
+				
+				
+				
 				//System.out.print("SIZE: "+ stopTimesList.size());
 				//StopTimes firstTime = stopTimesList.get(0);
 				//System.out.println("FIRST Stop: ");
@@ -242,7 +259,6 @@ public class BusMain
 				System.out.print("Please enter the arrival time you would like to search for, with the format hh:mm:ss : ");
 				
 				String userArrivalTime = input.next().trim();
-				//System.out.print("YOU ENTERED: " + userArrivalTime);
 				ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
 				
 				for(int i = 0; i < stopTimesList.size(); i++)
@@ -271,14 +287,27 @@ public class BusMain
 				}
 				
 				Insertion.sort(tripIdArray);
+				System.out.println("SORTED: ");
+				System.out.println(Arrays.toString(tripIdArray));
 				
+				for(int i = 0; i < tripIdArray.length; i ++)
+				{
+					for(int j = 0; j < stopTimesMatchingCriteriaList.size(); j++)
+					{
+						if(tripIdArray[i] == stopTimesMatchingCriteriaList.get(j).tripID)
+						{
+							System.out.println(stopTimesMatchingCriteriaList.get(j).toString());
+						}
+					}
+				}
+				
+				/*
 				for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
 				{
 					System.out.println(stopTimesMatchingCriteriaList.get(i).toString());
 				}
+				*/
 				
-				System.out.println("SORTED: ");
-				System.out.print(Arrays.toString(tripIdArray));
 				
 			}
 			else if(!userInput.equalsIgnoreCase("quit"))
