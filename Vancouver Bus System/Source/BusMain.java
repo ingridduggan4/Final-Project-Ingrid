@@ -243,7 +243,7 @@ public class BusMain
 				
 				String userArrivalTime = input.next().trim();
 				//System.out.print("YOU ENTERED: " + userArrivalTime);
-				ArrayList<StopTimes> stopTimesMatchingCriteria = new ArrayList<StopTimes>();
+				ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
 				
 				for(int i = 0; i < stopTimesList.size(); i++)
 				{
@@ -256,16 +256,29 @@ public class BusMain
 					if(Integer.parseInt(currentArrivalTimeArray[0]) == Integer.parseInt(userArrivalTimeArray[0]) && Integer.parseInt(currentArrivalTimeArray[1]) == Integer.parseInt(userArrivalTimeArray[1]) && Integer.parseInt(currentArrivalTimeArray[2]) == Integer.parseInt(userArrivalTimeArray[2]))
 					{
 						//System.out.print("ENTER 2");
-						stopTimesMatchingCriteria.add(currentStopTime);
+						stopTimesMatchingCriteriaList.add(currentStopTime);
 						//System.out.println(currentStopTime.toString());
 					}
 					
 				}
 				
-				for(int i = 0; i < stopTimesMatchingCriteria.size(); i++)
+				Integer[] tripIdArray = new Integer[stopTimesMatchingCriteriaList.size()];
+				
+				for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
 				{
-					System.out.println(stopTimesMatchingCriteria.get(i).toString());
+					StopTimes currentStopTime = stopTimesMatchingCriteriaList.get(i);
+					tripIdArray[i] = currentStopTime.tripID;
 				}
+				
+				Insertion.sort(tripIdArray);
+				
+				for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
+				{
+					System.out.println(stopTimesMatchingCriteriaList.get(i).toString());
+				}
+				
+				System.out.println("SORTED: ");
+				System.out.print(Arrays.toString(tripIdArray));
 				
 			}
 			else if(!userInput.equalsIgnoreCase("quit"))
