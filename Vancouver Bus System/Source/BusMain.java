@@ -105,15 +105,12 @@ public class BusMain
 	        	
 	            while(text!=null)
 	            {  
-	            	System.out.println(count);
 	            	StopTimes stopTime = new StopTimes();
 	            	
 	            	String[] stopTimeData= text.split(",");
 	            	stopTime.tripID = Integer.parseInt(stopTimeData[0]);
 	            	stopTime.arrivalTime = stopTimeData[1];
 	            	stopTime.departureTime = stopTimeData[2];
-	            	
-	            	System.out.print("LENGTH: "+stopTimeData.length);
 	            	stopTime.stopID = stopTimeData[3];
 	            	
 	            	stopTime.stopSequence = Integer.parseInt(stopTimeData[4]);
@@ -173,6 +170,11 @@ public class BusMain
 			if(userInput.equalsIgnoreCase("A"))
 			{
 				System.out.println("ONE");
+				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
+				System.out.print("SIZE: "+ stopTimesList.size());
+				StopTimes firstTime = stopTimesList.get(0);
+				System.out.println("FIRST Stop: ");
+				System.out.print(firstTime.toString());
 				
 			}
 			else if(userInput.equalsIgnoreCase("B"))

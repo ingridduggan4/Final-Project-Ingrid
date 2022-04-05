@@ -13,7 +13,7 @@ public class StopTimes
 	
 	public String toString()
 	{
-		return "tripID: " + tripID + "\n arrivalTime: " + arrivalTime + "\n departureTime: " + departureTime;
+		return "tripID: " + tripID + "\narrivalTime: " + arrivalTime + "\ndepartureTime: " + departureTime + "\nstopID: " + stopID + "\nstopSequence: " + stopSequence + "\nStop Headsign: " + stopHeadsign + "\npickupType: " + pickupType + "\ndropoffType: " + dropoffType + "\ndistanceTraveled: " + distTraveled;
 	}
 	
 }
