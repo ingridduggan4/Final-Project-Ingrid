@@ -101,7 +101,6 @@ public class BusMain
 	        try
 	        {
 	        	String text=br.readLine();
-	        	int count = 0;
 	        	
 	            while(text!=null)
 	            {  
@@ -134,10 +133,18 @@ public class BusMain
 	            	}
 	            	*/
 	            	
+	            	/*String[] arrivalTime = stopTimeData[1].split(":");
+	            	String[] departureTime = stopTimeData[2].split(":");
 	            	
-	                stopTimesList.add(stopTime);
+	            	if(Integer.parseInt(arrivalTime[0]) > 24 && Integer.parseInt(departureTime[0]) > 24)
+	            	{
+	            		System.out.print("INVALID TIME: " + arrivalTime[0] + ", " + departureTime[0]);
+	            	}
+	            	*/
+	            	
+	            	
+	            	stopTimesList.add(stopTime);
 	                text=br.readLine();
-	                count++;
 	            }
 	
 	            br.close();    
@@ -157,7 +164,7 @@ public class BusMain
 		System.out.println("(A) Find the shortest path between two bus stops");
 		System.out.println("(B) Search for a bus stop by name" );
 		System.out.println("(C) Search for all trips with a certain arrival time");
-		System.out.println("(Please enter either A,B,C or 'quit')");
+		System.out.println("(Please enter either A,B,C or 'quit'): ");
 		Scanner input = new Scanner(System.in);
 		String userInput = input.next();
 		
@@ -169,13 +176,8 @@ public class BusMain
 			
 			if(userInput.equalsIgnoreCase("A"))
 			{
+
 				System.out.println("ONE");
-				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
-				System.out.print("SIZE: "+ stopTimesList.size());
-				StopTimes firstTime = stopTimesList.get(0);
-				System.out.println("FIRST Stop: ");
-				System.out.print(firstTime.toString());
-				
 			}
 			else if(userInput.equalsIgnoreCase("B"))
 			{
@@ -230,6 +232,34 @@ public class BusMain
 			else if(userInput.equalsIgnoreCase("C"))
 			{
 				System.out.println("THREE");
+				
+				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
+				//System.out.print("SIZE: "+ stopTimesList.size());
+				//StopTimes firstTime = stopTimesList.get(0);
+				//System.out.println("FIRST Stop: ");
+				//System.out.print(firstTime.toString());
+				
+				System.out.print("Please enter the arrival time you would like to search for, with the format hh:mm:ss : ");
+				
+				String userArrivalTime = input.next();
+				ArrayList<StopTimes> stopTimesMatchingCriteria = new ArrayList<StopTimes>();
+				
+				for(int i = 0; i < stopTimesList.size(); i++)
+				{
+					
+					StopTimes currentStopTime = stopTimesList.get(i);
+					
+					if(userArrivalTime == currentStopTime.arrivalTime)
+					{
+						stopTimesMatchingCriteria.add(currentStopTime);
+					}
+				}
+				
+				for(int i = 0; i < stopTimesMatchingCriteria.size(); i++)
+				{
+					System.out.println(stopTimesMatchingCriteria.get(i).toString());
+				}
+				
 			}
 			else if(!userInput.equalsIgnoreCase("quit"))
 			{
@@ -241,7 +271,7 @@ public class BusMain
 			System.out.println("(A) Find the shortest path between two bus stops");
 			System.out.println("(B) Search for a bus stop by name" );
 			System.out.println("(C) Search for all trips with a certain arrival time");
-			System.out.println("(Please enter either A,B,C or 'quit')");
+			System.out.println("(Please enter either A,B,C or 'quit'): ");
 			userInput = input.next();
 			
 			
