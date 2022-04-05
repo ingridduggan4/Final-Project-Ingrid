@@ -241,18 +241,25 @@ public class BusMain
 				
 				System.out.print("Please enter the arrival time you would like to search for, with the format hh:mm:ss : ");
 				
-				String userArrivalTime = input.next();
+				String userArrivalTime = input.next().trim();
+				//System.out.print("YOU ENTERED: " + userArrivalTime);
 				ArrayList<StopTimes> stopTimesMatchingCriteria = new ArrayList<StopTimes>();
 				
 				for(int i = 0; i < stopTimesList.size(); i++)
 				{
 					
 					StopTimes currentStopTime = stopTimesList.get(i);
+					String currentArrivalTime = currentStopTime.arrivalTime.trim();
+					String[] currentArrivalTimeArray = currentArrivalTime.split(":");
+					String[] userArrivalTimeArray = userArrivalTime.split(":");
 					
-					if(userArrivalTime == currentStopTime.arrivalTime)
+					if(Integer.parseInt(currentArrivalTimeArray[0]) == Integer.parseInt(userArrivalTimeArray[0]) && Integer.parseInt(currentArrivalTimeArray[1]) == Integer.parseInt(userArrivalTimeArray[1]) && Integer.parseInt(currentArrivalTimeArray[2]) == Integer.parseInt(userArrivalTimeArray[2]))
 					{
+						//System.out.print("ENTER 2");
 						stopTimesMatchingCriteria.add(currentStopTime);
+						//System.out.println(currentStopTime.toString());
 					}
+					
 				}
 				
 				for(int i = 0; i < stopTimesMatchingCriteria.size(); i++)
@@ -269,7 +276,7 @@ public class BusMain
 			
 			System.out.println("What would you like to do next?");
 			System.out.println("(A) Find the shortest path between two bus stops");
-			System.out.println("(B) Search for a bus stop by name" );
+			System.out.println("(B) Search for a bus stop by name");
 			System.out.println("(C) Search for all trips with a certain arrival time");
 			System.out.println("(Please enter either A,B,C or 'quit'): ");
 			userInput = input.next();
