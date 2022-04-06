@@ -160,6 +160,10 @@ public class BusMain
 
 	public static void main(String[] args) 
 	{
+		ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
+		ArrayList<Transfers> transfersList = readInTransfersFile("Transfers");
+		ArrayList<BusStop> busStopList = readInStopsFile("Stops");
+		
 		System.out.println("Welcome to the Vancouver Bus System!");
 		System.out.println("What would you like to do next?");
 		System.out.println("(A) Find the shortest path between two bus stops");
@@ -169,18 +173,46 @@ public class BusMain
 		Scanner input = new Scanner(System.in);
 		String userInput = input.next();
 		
-		readInTransfersFile("Transfers");
 		
 		while(!userInput.equalsIgnoreCase("quit"))
 		{
 			if(userInput.equalsIgnoreCase("A"))
 			{
-
-				System.out.println("ONE");
+				System.out.print("Please enter the first bus stop ID: ");
+				int firstStop = input.nextInt();
+				System.out.print("Please enter the second bus stop ID: ");
+				int secondStop = input.nextInt();
+				boolean validFirstStop = false;
+				boolean validSecondStop = false;
+				
+				for(int i = 0; i < busStopList.size(); i++)
+				{
+					if(busStopList.get(i).iD == firstStop)
+					{
+						validFirstStop = true;
+					}
+					
+					if(busStopList.get(i).iD == secondStop)
+					{
+						validSecondStop = true;
+					}
+				}
+				
+				if(validFirstStop == false || validSecondStop == false)
+				{
+					System.out.println("Error: invalid stop ID");
+				}
+				else
+				{
+					System.out.println("SUCCESS!");
+				}
+				
+				
+				
 			}
 			else if(userInput.equalsIgnoreCase("B"))
 			{
-				ArrayList<BusStop> busStopList = readInStopsFile("Stops");
+
 				//System.out.print("SIZE: "+ busStopList.size());
 				//BusStop firstStop = busStopList.get(0);
 				//System.out.println("FIRST Stop: ");
@@ -229,9 +261,7 @@ public class BusMain
 			else if(userInput.equalsIgnoreCase("C"))
 			{
 				System.out.println("THREE");
-				
-				ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
-				
+	
 	            for(int i = 0; i < stopTimesList.size(); i++)
 	            {
 	            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
