@@ -235,11 +235,9 @@ public class BusMain
 	            for(int i = 0; i < stopTimesList.size(); i++)
 	            {
 	            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
-	            	String departureTime = stopTimesList.get(i).departureTime.trim();
 	            	String[] arrivalTimeArray = arrivalTime.split(":");
-	            	String[] departureTimeArray = departureTime.split(":");
 	            	
-	            	if(Integer.parseInt(arrivalTimeArray[0]) > 24 || Integer.parseInt(departureTimeArray[0]) > 24)
+	            	if(Integer.parseInt(arrivalTimeArray[0]) > 23)
 	            	{
 	            		//System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
 	            		stopTimesList.remove(i);
@@ -256,56 +254,68 @@ public class BusMain
 				System.out.print("Please enter the arrival time you would like to search for, with the format hh:mm:ss : ");
 				
 				String userArrivalTime = input.next().trim();
-				ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
 				
-				for(int i = 0; i < stopTimesList.size(); i++)
+				if(!validateUserTime(userArrivalTime)) 
+				{
+					System.out.print("Sorry - invalid time");
+				}
+				else
 				{
 					
-					StopTimes currentStopTime = stopTimesList.get(i);
-					String currentArrivalTime = currentStopTime.arrivalTime.trim();
-					String[] currentArrivalTimeArray = currentArrivalTime.split(":");
-					String[] userArrivalTimeArray = userArrivalTime.split(":");
+				
+				
+					ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
 					
-					if(Integer.parseInt(currentArrivalTimeArray[0]) == Integer.parseInt(userArrivalTimeArray[0]) && Integer.parseInt(currentArrivalTimeArray[1]) == Integer.parseInt(userArrivalTimeArray[1]) && Integer.parseInt(currentArrivalTimeArray[2]) == Integer.parseInt(userArrivalTimeArray[2]))
+					for(int i = 0; i < stopTimesList.size(); i++)
 					{
-						//System.out.print("ENTER 2");
-						stopTimesMatchingCriteriaList.add(currentStopTime);
-						//System.out.println(currentStopTime.toString());
+						
+						StopTimes currentStopTime = stopTimesList.get(i);
+						String currentArrivalTime = currentStopTime.arrivalTime.trim();
+						String[] currentArrivalTimeArray = currentArrivalTime.split(":");
+						String[] userArrivalTimeArray = userArrivalTime.split(":");
+						
+						if(Integer.parseInt(currentArrivalTimeArray[0]) == Integer.parseInt(userArrivalTimeArray[0]) && Integer.parseInt(currentArrivalTimeArray[1]) == Integer.parseInt(userArrivalTimeArray[1]) && Integer.parseInt(currentArrivalTimeArray[2]) == Integer.parseInt(userArrivalTimeArray[2]))
+						{
+							//System.out.print("ENTER 2");
+							stopTimesMatchingCriteriaList.add(currentStopTime);
+							//System.out.println(currentStopTime.toString());
+						}
+						
 					}
 					
-				}
-				
-				Integer[] tripIdArray = new Integer[stopTimesMatchingCriteriaList.size()];
-				
-				for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
-				{
-					StopTimes currentStopTime = stopTimesMatchingCriteriaList.get(i);
-					tripIdArray[i] = currentStopTime.tripID;
-				}
-				
-				Insertion.sort(tripIdArray);
-				//System.out.println("SORTED: ");
-				//System.out.println(Arrays.toString(tripIdArray));
-				
-				System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
-				
-				for(int i = 0; i < tripIdArray.length; i ++)
-				{
-					for(int j = 0; j < stopTimesMatchingCriteriaList.size(); j++)
+					Integer[] tripIdArray = new Integer[stopTimesMatchingCriteriaList.size()];
+					
+					for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
 					{
-						if(tripIdArray[i] == stopTimesMatchingCriteriaList.get(j).tripID)
+						StopTimes currentStopTime = stopTimesMatchingCriteriaList.get(i);
+						tripIdArray[i] = currentStopTime.tripID;
+					}
+					
+					Insertion.sort(tripIdArray);
+					//System.out.println("SORTED: ");
+					//System.out.println(Arrays.toString(tripIdArray));
+					
+					System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
+					
+					for(int i = 0; i < tripIdArray.length; i ++)
+					{
+						for(int j = 0; j < stopTimesMatchingCriteriaList.size(); j++)
 						{
-							System.out.println(stopTimesMatchingCriteriaList.get(j).toString());
+							if(tripIdArray[i] == stopTimesMatchingCriteriaList.get(j).tripID)
+							{
+								System.out.println(stopTimesMatchingCriteriaList.get(j).toString());
+							}
 						}
 					}
+					
+					/*
+					for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
+					{
+						System.out.println(stopTimesMatchingCriteriaList.get(i).toString());
+					}
+					*/
+					
 				}
-				
-				/*
-				for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
-				{
-					System.out.println(stopTimesMatchingCriteriaList.get(i).toString());
-				}
-				*/
 				
 				
 			}
@@ -328,6 +338,35 @@ public class BusMain
 		System.out.print("Thank you for using the Vancouver Bus System, goodbye!");
 	}
 	
+	public static boolean validateUserTime(String userTime)
+	{
+		boolean valid = true;
+		
+		String[] userTimeArray = userTime.split(":");
+		
+		if(userTimeArray.length != 3)
+		{
+			valid = false;
+		}
+		
+		if(Integer.parseInt(userTimeArray[0]) <0 || Integer.parseInt(userTimeArray[0]) > 23)
+		{
+			valid = false;
+		}
+		
+		if(Integer.parseInt(userTimeArray[1]) <0 || Integer.parseInt(userTimeArray[1]) > 59)
+		{
+			valid = false;
+		}
+		
+		if(Integer.parseInt(userTimeArray[2]) <0 || Integer.parseInt(userTimeArray[2]) > 59)
+		{
+			valid = false;
+		}
+		
+		
+		return valid;
+	}
 	
 
 }
