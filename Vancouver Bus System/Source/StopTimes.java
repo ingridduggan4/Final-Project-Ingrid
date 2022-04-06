@@ -4,7 +4,7 @@ public class StopTimes
 	public int tripID;
 	public String arrivalTime;
 	public String departureTime;
-	public String stopID;
+	public int stopID;
 	public int stopSequence;
 	public String stopHeadsign;
 	public int pickupType;

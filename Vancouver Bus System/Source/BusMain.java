@@ -110,7 +110,7 @@ public class BusMain
 	            	stopTime.tripID = Integer.parseInt(stopTimeData[0]);
 	            	stopTime.arrivalTime = stopTimeData[1];
 	            	stopTime.departureTime = stopTimeData[2];
-	            	stopTime.stopID = stopTimeData[3];
+	            	stopTime.stopID = Integer.parseInt(stopTimeData[3]);
 	            	
 	            	stopTime.stopSequence = Integer.parseInt(stopTimeData[4]);
 	            	stopTime.stopHeadsign = stopTimeData[5];
@@ -204,7 +204,33 @@ public class BusMain
 				}
 				else
 				{
-					System.out.println("SUCCESS!");
+					EdgeWeightedDigraph busNetwork = new EdgeWeightedDigraph(stopTimesList.size());
+					
+					for(int i = 0; i < stopTimesList.size()-1; i++)
+					{
+						if(stopTimesList.get(i).tripID == stopTimesList.get(i+1).tripID)
+						{
+							DirectedEdge currentEdge = new DirectedEdge(stopTimesList.get(i).stopID, stopTimesList.get(i+1).stopID,1);
+							busNetwork.addEdge(currentEdge);
+						}
+					}
+					
+					for(int i = 0; i < transfersList.size(); i++)
+					{
+						int cost = 0;
+						
+						if(transfersList.get(i).transferType == 0)
+						{
+							cost = 2;
+						}
+						else if(transfersList.get(i).transferType == 2)
+						{
+							cost = transfersList.get(i).minTransferTime/100;
+						}
+						
+						DirectedEdge currentEdge = new DirectedEdge(transfersList.get(i).fromStopID, transfersList.get(i).toStopID, cost);
+						busNetwork.addEdge(currentEdge);
+					}
 				}
 				
 				
