@@ -200,7 +200,7 @@ public class BusMain
 				
 				if(validFirstStop == false || validSecondStop == false)
 				{
-					System.out.println("Error: invalid stop ID");
+					System.out.println("\n" + "Error: invalid stop ID" + "\n");
 				}
 				else
 				{
@@ -231,6 +231,15 @@ public class BusMain
 						DirectedEdge currentEdge = new DirectedEdge(transfersList.get(i).fromStopID, transfersList.get(i).toStopID, cost);
 						busNetwork.addEdge(currentEdge);
 					}
+					
+					DijkstraSP shortestBusPaths = new DijkstraSP(busNetwork, firstStop);
+					Iterable<DirectedEdge> shortestPath = shortestBusPaths.pathTo(secondStop);
+					
+					System.out.println("\n" + "The shortest path between stop " + firstStop + " and stop " + secondStop + " is: ");
+					System.out.println(shortestPath);
+					System.out.println("The total cost is: " + shortestBusPaths.distTo(secondStop) + "\n");
+					
+					//System.out.print(busNetwork.toString());
 				}
 				
 				
@@ -265,20 +274,28 @@ public class BusMain
 					//System.out.println(firstStop.name);
 					//System.out.print(busStopTST.keysWithPrefix(userString));
 					
-					System.out.print("\n");
-					System.out.print("Here are all the stops matching your search: \n");
-					System.out.print("\n");
-					
 					int stopCount = 0;
 					
 					Iterable<String> stops = busStopTST.keysWithPrefix(userString);
 					for(String stop : stops)
 					{
 						stopCount++;
+						if(stopCount == 1)
+						{
+							System.out.print("\n");
+							System.out.print("Here are all the stops matching your search: \n");
+							System.out.print("\n");
+						}
+						
 						BusStop currentStop = busStopTST.get(stop);
 						System.out.println(stopCount + ": " +stop);
 						System.out.print(currentStop.toStringForSearch());
 						System.out.println("");
+					}
+					
+					if(stopCount == 0)
+					{
+						System.out.print("\n" + "Sorry, there are no stops matching your search. Please try again." + "\n");
 					}
 					
 				}
@@ -381,7 +398,7 @@ public class BusMain
 
 			}
 			
-			System.out.println("What would you like to do next?");
+			System.out.println("\n" + "What would you like to do next?");
 			System.out.println("(A) Find the shortest path between two bus stops");
 			System.out.println("(B) Search for a bus stop by name");
 			System.out.println("(C) Search for all trips with a certain arrival time");
