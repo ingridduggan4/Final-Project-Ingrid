@@ -188,151 +188,165 @@ public class BusMain
 		System.out.println("(A) Find the shortest path between two bus stops");
 		System.out.println("(B) Search for a bus stop by name" );
 		System.out.println("(C) Search for all trips with a certain arrival time");
-		System.out.println("(Please enter either A,B,C or 'quit'): ");
+		System.out.println("(Please enter either A,B,C or 'QUIT'): ");
 		Scanner input = new Scanner(System.in);
 		String userInput = input.next();
 		
 		
-		while(!userInput.equalsIgnoreCase("quit"))
+		while(!userInput.equalsIgnoreCase("QUIT"))
 		{
 			if(userInput.equalsIgnoreCase("A"))
 			{
-				System.out.print("Please enter the first bus stop ID: ");
-				int firstStop = input.nextInt();
-				System.out.print("Please enter the second bus stop ID: ");
-				int secondStop = input.nextInt();
-				boolean validFirstStop = false;
-				boolean validSecondStop = false;
+
+				boolean exit = false;
 				
-	            /*for(int i = 0; i < stopTimesList.size(); i++)
-	            {
-	            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
-	            	String[] arrivalTimeArray = arrivalTime.split(":");
-	            	
-	            	if(Integer.parseInt(arrivalTimeArray[0]) > 23)
-	            	{
-	            		//System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
-	            		stopTimesList.remove(i);
-	            	}
-	            	
-	            }
-	            */
-				
-				for(int i = 0; i < busStopList.size(); i++)
+				while(!exit)
 				{
-					if(busStopList.get(i).iD == firstStop)
-					{
-						validFirstStop = true;
-					}
+				
+					System.out.print("Please enter the first bus stop ID: ");
+					int firstStop = input.nextInt();
+					System.out.print("Please enter the second bus stop ID: ");
+					int secondStop = input.nextInt();
+
+					boolean validFirstStop = false;
+					boolean validSecondStop = false;
 					
-					if(busStopList.get(i).iD == secondStop)
-					{
-						validSecondStop = true;
-					}
-				}
-				
-				if(validFirstStop == false || validSecondStop == false)
-				{
-					System.out.println("\n" + "Error: invalid stop ID" + "\n");
-				}
-				else
-				{
-					EdgeWeightedDigraph busNetwork = new EdgeWeightedDigraph(stopTimesList.size());
+		            /*for(int i = 0; i < stopTimesList.size(); i++)
+		            {
+		            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
+		            	String[] arrivalTimeArray = arrivalTime.split(":");
+		            	
+		            	if(Integer.parseInt(arrivalTimeArray[0]) > 23)
+		            	{
+		            		//System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
+		            		stopTimesList.remove(i);
+		            	}
+		            	
+		            }
+		            */
 					
-					for(int i = 0; i < stopTimesList.size()-1; i++)
+					for(int i = 0; i < busStopList.size(); i++)
 					{
-						if(stopTimesList.get(i).tripID == stopTimesList.get(i+1).tripID)
+						if(busStopList.get(i).iD == firstStop)
 						{
-							DirectedEdge currentEdge = new DirectedEdge(stopTimesList.get(i).stopID, stopTimesList.get(i+1).stopID,1);
+							validFirstStop = true;
+						}
+						
+						if(busStopList.get(i).iD == secondStop)
+						{
+							validSecondStop = true;
+						}
+					}
+					
+					if(validFirstStop == false || validSecondStop == false)
+					{
+						System.out.println("\n" + "Error: invalid stop ID" + "\n");
+					}
+					else
+					{
+						exit = true;
+						EdgeWeightedDigraph busNetwork = new EdgeWeightedDigraph(stopTimesList.size());
+						
+						for(int i = 0; i < stopTimesList.size()-1; i++)
+						{
+							if(stopTimesList.get(i).tripID == stopTimesList.get(i+1).tripID)
+							{
+								DirectedEdge currentEdge = new DirectedEdge(stopTimesList.get(i).stopID, stopTimesList.get(i+1).stopID,1);
+								busNetwork.addEdge(currentEdge);
+							}
+						}
+						
+						for(int i = 0; i < transfersList.size(); i++)
+						{
+							int cost = 0;
+							
+							if(transfersList.get(i).transferType == 0)
+							{
+								cost = 2;
+							}
+							else if(transfersList.get(i).transferType == 2)
+							{
+								cost = transfersList.get(i).minTransferTime/100;
+							}
+							
+							DirectedEdge currentEdge = new DirectedEdge(transfersList.get(i).fromStopID, transfersList.get(i).toStopID, cost);
 							busNetwork.addEdge(currentEdge);
 						}
-					}
-					
-					for(int i = 0; i < transfersList.size(); i++)
-					{
-						int cost = 0;
 						
-						if(transfersList.get(i).transferType == 0)
-						{
-							cost = 2;
-						}
-						else if(transfersList.get(i).transferType == 2)
-						{
-							cost = transfersList.get(i).minTransferTime/100;
-						}
+						DijkstraSP shortestBusPaths = new DijkstraSP(busNetwork, firstStop);
+						Iterable<DirectedEdge> shortestPath = shortestBusPaths.pathTo(secondStop);
 						
-						DirectedEdge currentEdge = new DirectedEdge(transfersList.get(i).fromStopID, transfersList.get(i).toStopID, cost);
-						busNetwork.addEdge(currentEdge);
+						System.out.println("\n" + "The shortest path between stop " + firstStop + " and stop " + secondStop + " is: ");
+						System.out.println(shortestPath);
+						System.out.println("The total cost is: " + shortestBusPaths.distTo(secondStop) + "\n");
+						
+						
 					}
-					
-					DijkstraSP shortestBusPaths = new DijkstraSP(busNetwork, firstStop);
-					Iterable<DirectedEdge> shortestPath = shortestBusPaths.pathTo(secondStop);
-					
-					System.out.println("\n" + "The shortest path between stop " + firstStop + " and stop " + secondStop + " is: ");
-					System.out.println(shortestPath);
-					System.out.println("The total cost is: " + shortestBusPaths.distTo(secondStop) + "\n");
-					
-					
-				}
-				
+				 }
 				
 				
 			}
 			else if(userInput.equalsIgnoreCase("B"))
 			{
+				boolean exit = false;
 
 				//System.out.print("SIZE: "+ busStopList.size());
 				//BusStop firstStop = busStopList.get(0);
 				//System.out.println("FIRST Stop: ");
 				//System.out.print(firstStop.toString());
 				
-				System.out.print("Please enter the stop you would like to search for: ");
-				
-				if(input.hasNext())
+				while(!exit)
 				{
-					String userString = input.next();
-					TST<BusStop> busStopTST = new TST();
-					//System.out.println("You entered: " + userString);
+				
+					System.out.print("Please enter the stop you would like to search for: ");
 					
-					for(int i = 0; i < busStopList.size(); i++)
+					if(input.hasNext())
 					{
-						BusStop currentStop = busStopList.get(i);
-						currentStop.moveKeywordToEnd();
-						busStopList.set(i, currentStop);
-						busStopTST.put(currentStop.name, currentStop);
-					}
-					
-					//BusStop firstStop = busStopList.get(0);
-					//.out.println("FIRST Stop: ");
-					//System.out.println(firstStop.name);
-					//System.out.print(busStopTST.keysWithPrefix(userString));
-					
-					int stopCount = 0;
-					
-					Iterable<String> stops = busStopTST.keysWithPrefix(userString);
-					
-					for(String stop : stops)
-					{
-						stopCount++;
+						String userString = input.next();
+						TST<BusStop> busStopTST = new TST();
+						//System.out.println("You entered: " + userString);
 						
-						if(stopCount == 1)
+						for(int i = 0; i < busStopList.size(); i++)
 						{
-							System.out.print("\n");
-							System.out.print("Here are all the stops matching your search: \n");
-							System.out.print("\n");
+							BusStop currentStop = busStopList.get(i);
+							currentStop.moveKeywordToEnd();
+							busStopList.set(i, currentStop);
+							busStopTST.put(currentStop.name, currentStop);
 						}
 						
-						BusStop currentStop = busStopTST.get(stop);
-						System.out.println(stopCount + ": " +stop);
-						System.out.print(currentStop.toStringForSearch());
-						System.out.println("");
+						//BusStop firstStop = busStopList.get(0);
+						//.out.println("FIRST Stop: ");
+						//System.out.println(firstStop.name);
+						//System.out.print(busStopTST.keysWithPrefix(userString));
+						
+						int stopCount = 0;
+						
+						Iterable<String> stops = busStopTST.keysWithPrefix(userString);
+						
+						for(String stop : stops)
+						{
+							stopCount++;
+							
+							if(stopCount == 1)
+							{
+								System.out.print("\n");
+								System.out.print("Here are all the stops matching your search: \n");
+								System.out.print("\n");
+							}
+							
+							BusStop currentStop = busStopTST.get(stop);
+							System.out.println(stopCount + ": " +stop);
+							System.out.print(currentStop.toStringForSearch());
+							System.out.println("");
+							exit = true;
+						}
+						
+						if(stopCount == 0)
+						{
+							System.out.print("\n" + "Sorry, there are no stops matching your search. Please try again." + "\n");
+						}
+						
 					}
-					
-					if(stopCount == 0)
-					{
-						System.out.print("\n" + "Sorry, there are no stops matching your search. Please try again." + "\n");
-					}
-					
 				}
 			}
 			
@@ -359,84 +373,90 @@ public class BusMain
 				//System.out.println("FIRST Stop: ");
 				//System.out.print(firstTime.toString());
 				
-				System.out.print("Please enter the arrival time you would like to search for, with the format hh:mm:ss : ");
+				boolean exit = false;
 				
-				String userArrivalTime = input.next().trim();
-				
-				if(!validateUserTime(userArrivalTime)) 
-				{
-					System.out.print("Sorry - invalid time");
-				}
-				else
+				while(!exit)
 				{
 				
-					ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
+					System.out.print("Please enter the arrival time you would like to search for, with the format hh:mm:ss : ");
 					
-					for(int i = 0; i < stopTimesList.size(); i++)
+					String userArrivalTime = input.next().trim();
+					
+					if(!validateUserTime(userArrivalTime)) 
 					{
+						System.out.println("\nSorry - invalid time\n");
+					}
+					else
+					{
+					
+						ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
 						
-						StopTimes currentStopTime = stopTimesList.get(i);
-						String currentArrivalTime = currentStopTime.arrivalTime.trim();
-						String[] currentArrivalTimeArray = currentArrivalTime.split(":");
-						String[] userArrivalTimeArray = userArrivalTime.split(":");
-						
-						if(Integer.parseInt(currentArrivalTimeArray[0]) == Integer.parseInt(userArrivalTimeArray[0]) && Integer.parseInt(currentArrivalTimeArray[1]) == Integer.parseInt(userArrivalTimeArray[1]) && Integer.parseInt(currentArrivalTimeArray[2]) == Integer.parseInt(userArrivalTimeArray[2]))
+						for(int i = 0; i < stopTimesList.size(); i++)
 						{
-							//System.out.print("ENTER 2");
-							stopTimesMatchingCriteriaList.add(currentStopTime);
-							//System.out.println(currentStopTime.toString());
+							
+							StopTimes currentStopTime = stopTimesList.get(i);
+							String currentArrivalTime = currentStopTime.arrivalTime.trim();
+							String[] currentArrivalTimeArray = currentArrivalTime.split(":");
+							String[] userArrivalTimeArray = userArrivalTime.split(":");
+							
+							if(Integer.parseInt(currentArrivalTimeArray[0]) == Integer.parseInt(userArrivalTimeArray[0]) && Integer.parseInt(currentArrivalTimeArray[1]) == Integer.parseInt(userArrivalTimeArray[1]) && Integer.parseInt(currentArrivalTimeArray[2]) == Integer.parseInt(userArrivalTimeArray[2]))
+							{
+								//System.out.print("ENTER 2");
+								stopTimesMatchingCriteriaList.add(currentStopTime);
+								//System.out.println(currentStopTime.toString());
+							}
+							
 						}
 						
-					}
-					
-					Integer[] tripIdArray = new Integer[stopTimesMatchingCriteriaList.size()];
-					
-					for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
-					{
-						StopTimes currentStopTime = stopTimesMatchingCriteriaList.get(i);
-						tripIdArray[i] = currentStopTime.tripID;
-					}
-					
-					Insertion.sort(tripIdArray);
-					int timeCount = 0;
-					//System.out.println("SORTED: ");
-					//System.out.println(Arrays.toString(tripIdArray));
-					
-					
-					for(int i = 0; i < tripIdArray.length; i ++)
-					{
-						for(int j = 0; j < stopTimesMatchingCriteriaList.size(); j++)
+						Integer[] tripIdArray = new Integer[stopTimesMatchingCriteriaList.size()];
+						
+						for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
 						{
-							if(tripIdArray[i] == stopTimesMatchingCriteriaList.get(j).tripID)
+							StopTimes currentStopTime = stopTimesMatchingCriteriaList.get(i);
+							tripIdArray[i] = currentStopTime.tripID;
+						}
+						
+						Insertion.sort(tripIdArray);
+						int timeCount = 0;
+						//System.out.println("SORTED: ");
+						//System.out.println(Arrays.toString(tripIdArray));
+						
+						
+						for(int i = 0; i < tripIdArray.length; i ++)
+						{
+							for(int j = 0; j < stopTimesMatchingCriteriaList.size(); j++)
 							{
-								timeCount++;
-								if(timeCount == 1)
+								if(tripIdArray[i] == stopTimesMatchingCriteriaList.get(j).tripID)
 								{
-									System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
+									timeCount++;
+									if(timeCount == 1)
+									{
+										System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
+									}
+									
+									System.out.println(stopTimesMatchingCriteriaList.get(j).toString());
+									exit = true;
 								}
-								
-								System.out.println(stopTimesMatchingCriteriaList.get(j).toString());
 							}
 						}
+						
+						if(timeCount == 0)
+						{
+							System.out.println("\nSorry, there are no times matching your search. Please try again.\n");
+						}
+						
+						/*
+						for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
+						{
+							System.out.println(stopTimesMatchingCriteriaList.get(i).toString());
+						}
+						*/
+						
 					}
-					
-					if(timeCount == 0)
-					{
-						System.out.print("\nSorry, there are no times matching your search. Please try again.\n");
-					}
-					
-					/*
-					for(int i = 0; i < stopTimesMatchingCriteriaList.size(); i++)
-					{
-						System.out.println(stopTimesMatchingCriteriaList.get(i).toString());
-					}
-					*/
-					
 				}
 				
-				
 			}
-			else if(!userInput.equalsIgnoreCase("quit"))
+			else if(!userInput.equalsIgnoreCase("QUIT"))
 			{
 				System.out.println("Error: invalid input");
 
@@ -446,13 +466,13 @@ public class BusMain
 			System.out.println("(A) Find the shortest path between two bus stops");
 			System.out.println("(B) Search for a bus stop by name");
 			System.out.println("(C) Search for all trips with a certain arrival time");
-			System.out.println("(Please enter either A,B,C or 'quit'): ");
+			System.out.println("(Please enter either A,B,C or 'QUIT'): ");
 			userInput = input.next();
 			
 			
 		}
 		
-		System.out.print("Thank you for using the Vancouver Bus System, goodbye!");
+		System.out.print("Thank you for using the Vancouver Bus System, have a nice day!");
 	}
 	
 	public static boolean validateUserTime(String userTime)
