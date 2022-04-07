@@ -37,6 +37,8 @@ public class BusMain
 		            	String zoneID = busStopData[6];
 		            	String stopURL = busStopData[7];
 		            	String locationType = busStopData[8];
+		            	
+		            	
 		            	BusStop busStop = new BusStop(iD, code, name, desc, latitude, longitude, zoneID, stopURL, locationType);
 		                busStopList.add(busStop);
 		                
@@ -143,7 +145,11 @@ public class BusMain
 	            	}
 	            	*/
 	            	
-	            	stopTimesList.add(stopTime);
+	            	if(validateUserTime(stopTime.arrivalTime) == true && validateUserTime(stopTime.departureTime))
+	            	{
+		            	stopTimesList.add(stopTime);
+	            	}
+
 	                text=br.readLine();
 	            }
 	
@@ -163,6 +169,19 @@ public class BusMain
 		ArrayList<StopTimes> stopTimesList = readInStopTimesFile("Stop Times");
 		ArrayList<Transfers> transfersList = readInTransfersFile("Transfers");
 		ArrayList<BusStop> busStopList = readInStopsFile("Stops");
+		
+        for(int i = 0; i < stopTimesList.size(); i++)
+        {
+        	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
+        	String[] arrivalTimeArray = arrivalTime.split(":");
+        	
+        	if(Integer.parseInt(arrivalTimeArray[0]) > 23)
+        	{
+        		//System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
+        		stopTimesList.remove(i);
+        	}
+        	
+        }
 		
 		System.out.println("Welcome to the Vancouver Bus System!");
 		System.out.println("What would you like to do next?");
@@ -184,6 +203,20 @@ public class BusMain
 				int secondStop = input.nextInt();
 				boolean validFirstStop = false;
 				boolean validSecondStop = false;
+				
+	            /*for(int i = 0; i < stopTimesList.size(); i++)
+	            {
+	            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
+	            	String[] arrivalTimeArray = arrivalTime.split(":");
+	            	
+	            	if(Integer.parseInt(arrivalTimeArray[0]) > 23)
+	            	{
+	            		//System.out.println("INVALID TIME: " + arrivalTimeArray[0] + ", " + departureTimeArray[0]);
+	            		stopTimesList.remove(i);
+	            	}
+	            	
+	            }
+	            */
 				
 				for(int i = 0; i < busStopList.size(); i++)
 				{
@@ -239,7 +272,7 @@ public class BusMain
 					System.out.println(shortestPath);
 					System.out.println("The total cost is: " + shortestBusPaths.distTo(secondStop) + "\n");
 					
-					//System.out.print(busNetwork.toString());
+					
 				}
 				
 				
@@ -277,9 +310,11 @@ public class BusMain
 					int stopCount = 0;
 					
 					Iterable<String> stops = busStopTST.keysWithPrefix(userString);
+					
 					for(String stop : stops)
 					{
 						stopCount++;
+						
 						if(stopCount == 1)
 						{
 							System.out.print("\n");
@@ -303,9 +338,8 @@ public class BusMain
 			
 			else if(userInput.equalsIgnoreCase("C"))
 			{
-				System.out.println("THREE");
 	
-	            for(int i = 0; i < stopTimesList.size(); i++)
+	            /*for(int i = 0; i < stopTimesList.size(); i++)
 	            {
 	            	String arrivalTime = stopTimesList.get(i).arrivalTime.trim();
 	            	String[] arrivalTimeArray = arrivalTime.split(":");
@@ -317,6 +351,7 @@ public class BusMain
 	            	}
 	            	
 	            }
+	            */
 				
 				
 				//System.out.print("SIZE: "+ stopTimesList.size());
@@ -334,8 +369,6 @@ public class BusMain
 				}
 				else
 				{
-					
-				
 				
 					ArrayList<StopTimes> stopTimesMatchingCriteriaList = new ArrayList<StopTimes>();
 					
@@ -365,10 +398,10 @@ public class BusMain
 					}
 					
 					Insertion.sort(tripIdArray);
+					int timeCount = 0;
 					//System.out.println("SORTED: ");
 					//System.out.println(Arrays.toString(tripIdArray));
 					
-					System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
 					
 					for(int i = 0; i < tripIdArray.length; i ++)
 					{
@@ -376,9 +409,20 @@ public class BusMain
 						{
 							if(tripIdArray[i] == stopTimesMatchingCriteriaList.get(j).tripID)
 							{
+								timeCount++;
+								if(timeCount == 1)
+								{
+									System.out.println("Here are all the trips with the arrival time of " + userArrivalTime + ": ");
+								}
+								
 								System.out.println(stopTimesMatchingCriteriaList.get(j).toString());
 							}
 						}
+					}
+					
+					if(timeCount == 0)
+					{
+						System.out.print("\nSorry, there are no times matching your search. Please try again.\n");
 					}
 					
 					/*
@@ -414,29 +458,26 @@ public class BusMain
 	public static boolean validateUserTime(String userTime)
 	{
 		boolean valid = true;
+		String hours = "24";
+		String minutes = "60";
+		String seconds = "60";
 		
 		String[] userTimeArray = userTime.split(":");
 		
-		if(userTimeArray.length != 3)
+		if(userTimeArray[0].compareTo(hours)>=0)
 		{
 			valid = false;
 		}
 		
-		if(Integer.parseInt(userTimeArray[0]) <0 || Integer.parseInt(userTimeArray[0]) > 23)
+		if(userTimeArray[1].compareTo(minutes)>=0)
 		{
 			valid = false;
 		}
 		
-		if(Integer.parseInt(userTimeArray[1]) <0 || Integer.parseInt(userTimeArray[1]) > 59)
+		if(userTimeArray[2].compareTo(seconds)>=0)
 		{
 			valid = false;
 		}
-		
-		if(Integer.parseInt(userTimeArray[2]) <0 || Integer.parseInt(userTimeArray[2]) > 59)
-		{
-			valid = false;
-		}
-		
 		
 		return valid;
 	}
