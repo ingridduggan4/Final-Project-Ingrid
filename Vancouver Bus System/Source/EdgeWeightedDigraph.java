@@ -36,82 +36,6 @@ public class EdgeWeightedDigraph
             adj[v] = new Bag<DirectedEdge>();
     }
 
-    /**  
-     * Initializes an edge-weighted digraph from the specified input stream.
-     * The format is the number of vertices <em>V</em>,
-     * followed by the number of edges <em>E</em>,
-     * followed by <em>E</em> pairs of vertices and edge weights,
-     * with each entry separated by whitespace.
-     *
-     * @param  in the input stream
-     * @throws IllegalArgumentException if {@code in} is {@code null}
-     * @throws IllegalArgumentException if the endpoints of any edge are not in prescribed range
-     * @throws IllegalArgumentException if the number of vertices or edges is negative
-     */
-    
-    public EdgeWeightedDigraph(double[][] cityNetwork, int intersections, int roads) 
-    {
-    	if (cityNetwork == null) throw new IllegalArgumentException("argument is null");
-        try {
-            this.V = intersections;
-            if (V < 0) throw new IllegalArgumentException("number of vertices in a Digraph must be non-negative");
-            indegree = new int[V];
-            adj = (Bag<DirectedEdge>[]) new Bag[V];
-            for (int v = 0; v < V; v++) {
-                adj[v] = new Bag<DirectedEdge>();
-            }
-
-            int E = roads;
-            if (E < 0) throw new IllegalArgumentException("Number of edges must be non-negative");
-            
-            for (int i = 0; i < cityNetwork.length; i++) 
-            {
-            	for(int j = 0; j<cityNetwork.length; j++)
-            	{
-            		 int v = i;
-                     int w = j;
-                     validateVertex(v);
-                     validateVertex(w);
-                     double weight = cityNetwork[v][w];
-                     
-                     if(weight != 0)
-                     {
-                         addEdge(new DirectedEdge(v, w, weight));
-                     }
-
-            	}
-               
-            }
-        }   
-        catch (NoSuchElementException e) {
-            throw new IllegalArgumentException("invalid input format in EdgeWeightedDigraph constructor", e);
-        }
-        
-    }
-
-    /**
-     * Initializes a new edge-weighted digraph that is a deep copy of {@code G}.
-     *
-     * @param  G the edge-weighted digraph to copy
-     */
-    public EdgeWeightedDigraph(EdgeWeightedDigraph G) 
-    {
-        this(G.V());
-        this.E = G.E();
-        for (int v = 0; v < G.V(); v++)
-            this.indegree[v] = G.indegree(v);
-        for (int v = 0; v < G.V(); v++) {
-            // reverse so that adjacency list is in same order as original
-            Stack<DirectedEdge> reverse = new Stack<DirectedEdge>();
-            for (DirectedEdge e : G.adj[v]) {
-                reverse.push(e);
-            }
-            for (DirectedEdge e : reverse) {
-                adj[v].add(e);
-            }
-        }
-    }
-
     /**
      * Returns the number of vertices in this edge-weighted digraph.
      *
@@ -210,25 +134,6 @@ public class EdgeWeightedDigraph
         }
         return list;
     } 
-
-    /**
-     * Returns a string representation of this edge-weighted digraph.
-     *
-     * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
-     *         followed by the <em>V</em> adjacency lists of edges
-     */
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append(V + " " + E + NEWLINE);
-        for (int v = 0; v < V; v++) {
-            s.append(v + ": ");
-            for (DirectedEdge e : adj[v]) {
-                s.append(e + "  ");
-            }
-            s.append(NEWLINE);
-        }
-        return s.toString();
-    }
 
 }
 

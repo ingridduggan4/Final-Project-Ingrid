@@ -32,10 +32,6 @@ public class BusStop
 		this.parentStation = parentStation;
 	}
 	
-	public String toString()
-	{
-		return "iD: " + iD + ",code: " + code + ",name: " + name + "\n";
-	}
 	
 	public String toStringForSearch()
 	{
@@ -65,13 +61,6 @@ public class BusStop
 		name = stopName;
 	}
 	
-	public static void main(String[] args)
-	{
-		BusStop testStop = new BusStop(0,"0","WB HASTINGS ST FS HOLDOM AVE","0",0,0,"0","0","0");
-		testStop.moveKeywordToEnd();
-		
-		System.out.println("STOP NAME MOVED KEYWORD: " + testStop.name);
-	}
 	
 	
 }

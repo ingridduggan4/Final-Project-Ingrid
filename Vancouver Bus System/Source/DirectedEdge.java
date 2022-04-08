@@ -26,13 +26,6 @@ public class DirectedEdge
 		 return w; 
 	 }
 	 
-	    /**
-	     * Returns a string representation of the directed edge.
-	     * @return a string representation of the directed edge
-	     */
-	    public String toString() {
-	        return v + "->" + w + " " + String.format("%5.2f", weight);
-	    }
  
 }
 
