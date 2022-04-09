@@ -35,8 +35,6 @@ public class BusMain
 		            	String zoneID = busStopData[6];
 		            	String stopURL = busStopData[7];
 		            	String locationType = busStopData[8];
-		            	
-		            	
 		            	BusStop busStop = new BusStop(iD, code, name, desc, latitude, longitude, zoneID, stopURL, locationType);
 		                busStopList.add(busStop);
 		                
@@ -178,16 +176,17 @@ public class BusMain
 		{
 			if(userInput.equalsIgnoreCase("A"))
 			{
-
+				int firstStop = 0;
+				int secondStop = 0;
 				boolean exit = false;
 				
 				while(!exit)
 				{
-				
+
 					System.out.print("Please enter the first bus stop ID: ");
-					int firstStop = input.nextInt();
+					firstStop = input.nextInt();
 					System.out.print("Please enter the second bus stop ID: ");
-					int secondStop = input.nextInt();
+					secondStop = input.nextInt();
 
 					boolean validFirstStop = false;
 					boolean validSecondStop = false;
@@ -265,7 +264,7 @@ public class BusMain
 					
 					if(input.hasNext())
 					{
-						String userString = input.next();
+						String userString = input.next().toUpperCase();
 						TST<BusStop> busStopTST = new TST();
 						
 						for(int i = 0; i < busStopList.size(); i++)
@@ -410,23 +409,30 @@ public class BusMain
 		
 		String[] userTimeArray = userTime.split(":");
 		
-		if(userTimeArray[0].compareTo(hours)>=0)
+		if(userTimeArray.length == 3)
+		{
+			if(userTimeArray[0].compareTo(hours)>=0)
+			{
+				valid = false;
+			}
+			
+			if(userTimeArray[1].compareTo(minutes)>=0)
+			{
+				valid = false;
+			}
+			
+			if(userTimeArray[2].compareTo(seconds)>=0)
+			{
+				valid = false;
+			}
+			
+		}
+		else
 		{
 			valid = false;
 		}
 		
-		if(userTimeArray[1].compareTo(minutes)>=0)
-		{
-			valid = false;
-		}
-		
-		if(userTimeArray[2].compareTo(seconds)>=0)
-		{
-			valid = false;
-		}
 		
 		return valid;
 	}
-	
-
 }
